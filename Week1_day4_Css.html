@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 2 Part 2: Advanced CSS & Developer Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #9b59b6 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            min-height: 100vh;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide h1 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #e74c3c, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .slide h2 {
+            font-size: 2.8rem;
+            margin-bottom: 25px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .slide h3 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #f0f0f0;
+        }
+
+        .slide p {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .code-example {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+            border-left: 4px solid #3498db;
+            font-size: 0.9rem;
+        }
+
+        .demo-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            width: 100%;
+        }
+
+        .text-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .text-example {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .shadows-demo {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .shadow-box {
+            width: 150px;
+            height: 100px;
+            background: #3498db;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .shadow-1 { box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+        .shadow-2 { box-shadow: 0 8px 16px rgba(0,0,0,0.4); }
+        .shadow-3 { box-shadow: 0 12px 24px rgba(0,0,0,0.5); }
+        .shadow-4 { box-shadow: inset 0 4px 8px rgba(0,0,0,0.3); }
+
+        .transform-demo {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .transform-box {
+            width: 100px;
+            height: 100px;
+            background: #e74c3c;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .transform-box:hover {
+            transform: var(--hover-transform);
+        }
+
+        .rotate { --hover-transform: rotate(45deg); }
+        .scale { --hover-transform: scale(1.2); }
+        .skew { --hover-transform: skew(15deg); }
+        .translate { --hover-transform: translateX(20px); }
+
+        .devtools-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .devtools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .devtools-item {
+            background: rgba(52, 152, 219, 0.2);
+            border-radius: 10px;
+            padding: 25px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .devtools-item:hover {
+            background: rgba(52, 152, 219, 0.3);
+            transform: translateX(5px);
+        }
+
+        .devtools-item h4 {
+            color: #3498db;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: #e74c3c;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(231, 76, 60, 0.5); }
+            to { text-shadow: 0 0 40px rgba(243, 156, 18, 0.8); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animated {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        .kbd {
+            background: #34495e;
+            border: 1px solid #7f8c8d;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: monospace;
+            font-size: 0.9em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .slide h1 { font-size: 2.5rem; }
+            .slide h2 { font-size: 2rem; }
+            .slide h3 { font-size: 1.8rem; }
+            .slide p { font-size: 1.1rem; }
+            .slide { padding: 20px; }
+            .content-grid { grid-template-columns: 1fr; }
+            .shadows-demo, .transform-demo { flex-direction: column; align-items: center; }
+            .navigation { bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">9</span>
+        </div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>CSS Mastery Part 2</h1>
+            <p style="font-size: 1.8rem; margin-bottom: 30px;">Advanced Styling & Developer Tools</p>
+            <div style="font-size: 1.2rem; opacity: 0.9;">
+                <p>🎨 Master text styling and typography</p>
+                <p>✨ Create stunning visual effects</p>
+                <p>🔧 Use browser developer tools like a pro</p>
+                <p>🎯 Debug and perfect your CSS</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Text Styling Fundamentals -->
+        <div class="slide">
+            <h2>Text Styling Mastery</h2>
+            <p>Make your text beautiful and readable!</p>
+            <div class="demo-section">
+                <div class="text-demo">
+                    <div class="text-example">
+                        <h4 style="color: #3498db;">Font Properties</h4>
+                        <div style="font-family: Arial; font-size: 1.2rem; font-weight: bold;">Bold Arial Text</div>
+                        <div style="font-family: Georgia; font-style: italic;">Italic Georgia Text</div>
+                        <div style="font-family: 'Courier New'; font-variant: small-caps;">Small Caps Courier</div>
+                    </div>
+                    <div class="text-example">
+                        <h4 style="color: #e74c3c;">Text Alignment</h4>
+                        <div style="text-align: left;">Left Aligned</div>
+                        <div style="text-align: center;">Center Aligned</div>
+                        <div style="text-align: right;">Right Aligned</div>
+                        <div style="text-align: justify;">Justified text spreads evenly across the line.</div>
+                    </div>
+                    <div class="text-example">
+                        <h4 style="color: #27ae60;">Text Decoration</h4>
+                        <div style="text-decoration: underline;">Underlined Text</div>
+                        <div style="text-decoration: line-through;">Strikethrough Text</div>
+                        <div style="text-decoration: overline;">Overlined Text</div>
+                    </div>
+                </div>
+            </div>
+            <div class="code-example">
+.text-styles {
+  font-family: 'Arial', sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: underline;
+  line-height: 1.6;
+  letter-spacing: 1px;
+}
+            </div>
+        </div>
+
+        <!-- Slide 3: Advanced Text Effects -->
+        <div class="slide">
+            <h2>Advanced Text Effects</h2>
+            <div class="demo-section">
+                <div class="text-demo">
+                    <div class="text-example">
+                        <h4 style="color: #9b59b6;">Text Shadows</h4>
+                        <div style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5); font-size: 1.5rem;">Simple Shadow</div>
+                        <div style="text-shadow: 0 0 10px #3498db; font-size: 1.5rem; color: #3498db;">Glow Effect</div>
+                        <div style="text-shadow: 3px 3px 0 #e74c3c, 6px 6px 0 #f39c12; font-size: 1.5rem;">Layered Shadow</div>
+                    </div>
+                    <div class="text-example">
+                        <h4 style="color: #e67e22;">Text Transform</h4>
+                        <div style="text-transform: uppercase;">uppercase text</div>
+                        <div style="text-transform: lowercase;">LOWERCASE TEXT</div>
+                        <div style="text-transform: capitalize;">capitalize each word</div>
+                    </div>
+                    <div class="text-example">
+                        <h4 style="color: #1abc9c;">Spacing Control</h4>
+                        <div style="letter-spacing: 3px;">Letter Spacing</div>
+                        <div style="word-spacing: 10px;">Word Spacing Control</div>
+                        <div style="line-height: 2;">Line height affects<br>vertical spacing<br>between lines</div>
+                    </div>
+                </div>
+            </div>
+            <div class="code-example">
+.text-effects {
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  word-spacing: 5px;
+  line-height: 1.8;
+}
+
+.glow-text {
+  text-shadow: 0 0 10px #3498db;
+  color: #3498db;
+}
+            </div>
+        </div>
+
+        <!-- Slide 4: Box Shadows & Visual Effects -->
+        <div class="slide">
+            <h2>Box Shadows & Visual Effects</h2>
+            <p>Add depth and dimension to your elements!</p>
+            <div class="shadows-demo">
+                <div class="shadow-box shadow-1">Light</div>
+                <div class="shadow-box shadow-2">Medium</div>
+                <div class="shadow-box shadow-3">Heavy</div>
+                <div class="shadow-box shadow-4">Inset</div>
+            </div>
+            <div class="code-example">
+/* Basic shadow */
+.light-shadow {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Multiple shadows */
+.complex-shadow {
+  box-shadow: 
+    0 4px 8px rgba(0,0,0,0.1),
+    0 8px 16px rgba(0,0,0,0.1),
+    0 16px 32px rgba(0,0,0,0.1);
+}
+
+/* Inset shadow */
+.inset-shadow {
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+            </div>
+        </div>
+
+        <!-- Slide 5: Transforms & Transitions -->
+        <div class="slide">
+            <h2>CSS Transforms & Transitions</h2>
+            <p>Add movement and interactivity! <em>(Hover over the boxes)</em></p>
+            <div class="transform-demo">
+                <div class="transform-box rotate">Rotate</div>
+                <div class="transform-box scale">Scale</div>
+                <div class="transform-box skew">Skew</div>
+                <div class="transform-box translate">Move</div>
+            </div>
+            <div class="code-example">
+.interactive-box {
+  transition: transform 0.3s ease;
+}
+
+.interactive-box:hover {
+  transform: rotate(45deg);
+  /* or */
+  transform: scale(1.2);
+  /* or */
+  transform: translateX(20px);
+  /* or */
+  transform: skew(15deg);
+}
+
+/* Combine multiple transforms */
+.combined:hover {
+  transform: rotate(10deg) scale(1.1) translateY(-5px);
+}
+            </div>
+        </div>
+
+        <!-- Slide 6: Browser Developer Tools -->
+        <div class="slide">
+            <h2>🔧 Browser Developer Tools</h2>
+            <p>Your secret weapon for debugging and perfecting CSS!</p>
+            <div class="devtools-section">
+                <div class="devtools-grid">
+                    <div class="devtools-item">
+                        <h4>🖱️ Inspect Element</h4>
+                        <p>Right-click any element and select "Inspect" to see its HTML and CSS</p>
+                        <p><strong>Shortcut:</strong> <span class="kbd">F12</span> or <span class="kbd">Ctrl+Shift+I</span></p>
+                    </div>
+                    <div class="devtools-item">
+                        <h4>🎨 Styles Panel</h4>
+                        <p>View and edit CSS properties in real-time. Changes are instant!</p>
+                        <p><strong>Tip:</strong> Crossed-out styles are overridden by more specific rules</p>
+                    </div>
+                    <div class="devtools-item">
+                        <h4>📦 Box Model Viewer</h4>
+                        <p>Visualize margins, padding, borders, and content areas</p>
+                        <p><strong>Feature:</strong> Hover over elements to see their box model</p>
+                    </div>
+                    <div class="devtools-item">
+                        <h4>📱 Device Simulator</h4>
+                        <p>Test responsive design on different screen sizes</p>
+                        <p><strong>Shortcut:</strong> <span class="kbd">Ctrl+Shift+M</span> (Toggle device toolbar)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: DevTools Debugging Workflow -->
+        <div class="slide">
+            <h2>DevTools Debugging Workflow</h2>
+            <div class="content-grid">
+                <div class="card">
+                    <h3>1. 🔍 Inspect</h3>
+                    <p>Right-click the problematic element and select "Inspect"</p>
+                    <div class="code-example">
+<!-- HTML will be highlighted in the Elements panel -->
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>2. 🎯 Locate CSS</h3>
+                    <p>Find the CSS rules in the Styles panel. Look for crossed-out (overridden) styles</p>
+                </div>
+                <div class="card">
+                    <h3>3. ✏️ Edit Live</h3>
+                    <p>Click on any CSS value to edit it. Press Enter to apply changes</p>
+                </div>
+                <div class="card">
+                    <h3>4. 💾 Copy Changes</h3>
+                    <p>Once you're happy with the result, copy the changes to your actual CSS file</p>
+                </div>
+            </div>
+            <div class="demo-section">
+                <h3>Common Debugging Scenarios</h3>
+                <div class="text-demo">
+                    <div class="text-example">
+                        <h4>❌ Element not styling?</h4>
+                        <p>Check for typos in class names, CSS selector specificity, or file linking issues</p>
+                    </div>
+                    <div class="text-example">
+                        <h4>📱 Responsive issues?</h4>
+                        <p>Use device simulator to test different screen sizes and check media queries</p>
+                    </div>
+                    <div class="text-example">
+                        <h4>🎨 Colors not showing?</h4>
+                        <p>Verify color values, check for typos, and ensure proper contrast</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Practical Tips & Best Practices -->
+        <div class="slide">
+            <h2>💡 CSS Best Practices</h2>
+            <div class="content-grid">
+                <div class="card">
+                    <h3>🏗️ Structure</h3>
+                    <p>Organize CSS with comments, group related styles, and use consistent naming conventions</p>
+                    <div class="code-example">
+/* === HEADER STYLES === */
+.header { ... }
+.header-nav { ... }
+
+/* === MAIN CONTENT === */
+.main-content { ... }
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🎯 Specificity</h3>
+                    <p>Use classes over IDs for styling. Avoid !important unless absolutely necessary</p>
+                    <div class="code-example">
+/* Good */
+.button { ... }
+.button-primary { ... }
+
+/* Avoid */
+#button { ... }
+.button { color: red !important; }
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>📱 Mobile First</h3>
+                    <p>Start with mobile styles, then add desktop enhancements with media queries</p>
+                    <div class="code-example">
+/* Mobile first */
+.container { width: 100%; }
+
+@media (min-width: 768px) {
+  .container { width: 750px; }
+}
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🔧 Use DevTools</h3>
+                    <p>Always test changes in the browser before updating your CSS files</p>
+                    <p><strong>Workflow:</strong> Inspect → Edit → Test → Copy → Save</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Project Enhancement -->
+        <div class="slide">
+            <h2>🚀 Enhance Your Project</h2>
+            <div class="devtools-section">
+                <h3>Add These Advanced Features to Your "About Me" Page</h3>
+                <div class="devtools-grid">
+                    <div class="devtools-item">
+                        <h4>✨ Text Effects</h4>
+                        <p>Add text shadows, custom fonts, and letter spacing to make your content stand out</p>
+                    </div>
+                    <div class="devtools-item">
+                        <h4>🎨 Visual Depth</h4>
+                        <p>Use box shadows and subtle transforms to create depth and interactivity</p>
+                    </div>
+                    <div class="devtools-item">
+                        <h4>🔧 Debug with DevTools</h4>
+                        <p>Use browser tools to perfect your responsive design and fix any styling issues</p>
+                    </div>
+                    <div class="devtools-item">
+                        <h4>📱 Test Everywhere</h4>
+                        <p>Use the device simulator to ensure your site looks great on all screen sizes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-section">
+                <h3>Pro Tips for Your Project</h3>
+                <p>🎯 <span class="highlight">Start Simple:</span> Add one effect at a time and test thoroughly</p>
+                <p>🎨 <span class="highlight">Consistent Colors:</span> Stick to 2-3 main colors throughout your design</p>
+                <p>📝 <span class="highlight">Readable Text:</span> Ensure good contrast and comfortable font sizes</p>
+                <p>🔧 <span class="highlight">Use DevTools:</span> It's your best friend for debugging and experimenting!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">← Previous</button>
+        <button class="nav-btn active" onclick="goToSlide(0)">1</button>
+        <button class="nav-btn" onclick="goToSlide(1)">2</button>
+        <button class="nav-btn" onclick="goToSlide(2)">3</button>
+        <button class="nav-btn" onclick="goToSlide(3)">4</button>
+        <button class="nav-btn" onclick="goToSlide(4)">5</button>
+        <button class="nav-btn" onclick="goToSlide(5)">6</button>
+        <button class="nav-btn" onclick="goToSlide(6)">7</button>
+        <button class="nav-btn" onclick="goToSlide(7)">8</button>
+        <button class="nav-btn" onclick="goToSlide(8)">9</button>
+        <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const navBtns = document.querySelectorAll('.nav-btn');
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            // Update slide counter
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            // Update navigation buttons
+            navBtns.forEach((btn, index) => {
+                if (index > 0 && index < navBtns.length - 1) {
+                    btn.classList.toggle('active', index - 1 === currentSlide);
+                }
+            });
+
+            // Add animation to elements
+            setTimeout(() => {
+                const activeSlide = slides[currentSlide];
+                const elements = activeSlide.querySelectorAll('.card, .devtools-item, .text-example, .transform-box, .shadow-box');
+                elements.forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('animated');
+                    }, index * 100);
+                });
+            }, 200);
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        function goToSlide(n) {
+            showSlide(n);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+
+        // Add some interactive feedback for the transform boxes
+        const transformBoxes = document.querySelectorAll('.transform-box');
+        transformBoxes.forEach(box => {
+            box.addEventListener('click', function() {
+                this.style.transform = this.style.transform ? '' : 'rotate(180deg) scale(0.8)';
+            });
+        });
+    </script>
+</body>
+</html>
